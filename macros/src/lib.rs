@@ -58,15 +58,21 @@ pub fn tracker(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let mut methods = proc_macro2::TokenStream::new();
     for (num, (id, ty)) in field_list.iter().enumerate() {
         let get_id = Ident::new(&format!("get_{}", id), Span::call_site().into());
+        let update_id = Ident::new(&format!("update_{}", id), Span::call_site().into());
         let set_id = Ident::new(&format!("set_{}", id), Span::call_site().into());
 
         methods.extend(quote! {
-            pub fn #get_id(&self) -> #ty {
-                self.#id
+            pub fn #get_id(&self) -> &#ty {
+                &self.#id
+            }
+
+            pub fn #update_id<F: Fn(&mut #ty)>(&mut self, f: F)  {
+                self.tracker |= Self::#id();
+                f(&mut self.#id);
             }
 
             pub fn #set_id(&mut self, value: #ty) {
-                self.tracker |=Self::#id();
+                self.tracker |= Self::#id();
                 self.#id = value;
             }
 
@@ -92,7 +98,8 @@ pub fn tracker(_attr: TokenStream, item: TokenStream) -> TokenStream {
         fn reset(&mut self) {
             self.tracker = 0;
         }
-    }});
+    }
+    });
 
     output.into()
 }
