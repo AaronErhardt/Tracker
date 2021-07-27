@@ -3,6 +3,13 @@ name = "tracker-macros"
 version = "0.1.0"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2018"
+description = "Macros for the tracker crate"
+repository = "https://github.com/AaronErhardt/Tracker"
+readme = "../README.md"
+license = "LGPL-3.0-or-later"
+
+keywords = ["track", "tracker", "change"]
+categories = ["data-structures"]
 
 [lib]
 proc-macro = true
