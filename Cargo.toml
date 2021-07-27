@@ -1,10 +1,16 @@
 [package]
-name = "struct-tracker"
+name = "tracker"
 version = "0.1.0"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2018"
+description = "A macro to track changes to your structs"
+repository = "https://github.com/AaronErhardt/Tracker"
+readme = "README.md"
+license = "LGPL-3.0-or-later"
 
+keywords = ["track", "tracker", "change"]
+categories = ["data-structures"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-struct-tracker-macros = { path = "macros" }
+tracker-macros = { path = "macros" }

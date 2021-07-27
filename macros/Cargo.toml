@@ -1,5 +1,5 @@
 [package]
-name = "struct-tracker-macros"
+name = "tracker-macros"
 version = "0.1.0"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2018"
