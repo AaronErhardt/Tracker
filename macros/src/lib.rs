@@ -52,26 +52,31 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
         let set_id = Ident::new(&format!("set_{}", id), id_span);
 
         methods.extend(quote_spanned! { id_span =>
+            #[allow(dead_code, non_snake_case)]
             pub fn #get_id(&self) -> &#ty {
                 &self.#id
             }
 
+            #[allow(dead_code, non_snake_case)]
             pub fn #get_mut_id(&mut self) -> &mut #ty {
                 self.tracker |= Self::#id();
                 &mut self.#id
             }
 
+            #[allow(dead_code, non_snake_case)]
             pub fn #update_id<F: Fn(&mut #ty)>(&mut self, f: F)  {
                 self.tracker |= Self::#id();
                 f(&mut self.#id);
             }
 
+            #[allow(dead_code, non_snake_case)]
             pub const fn #id() -> #tracker_ty {
                 1 << #num
             }
         });
         if *no_eq {
             methods.extend(quote_spanned! { id_span =>
+                #[allow(dead_code, non_snake_case)]
                 pub fn #set_id(&mut self, value: #ty) {
                     self.tracker |= Self::#id();
                     self.#id = value;
@@ -79,6 +84,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
             });
         } else {
             methods.extend(quote_spanned! { id_span =>
+                #[allow(dead_code, non_snake_case)]
                 pub fn #set_id(&mut self, value: #ty) {
                     if self.#id != value {
                         self.tracker |= Self::#id();
@@ -92,6 +98,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
     output.extend(quote_spanned! { ident.span() =>
     impl #ident {
         #methods
+        #[allow(dead_code)]
         pub const fn track_all() -> #tracker_ty {
             #tracker_ty::MAX
         }
