@@ -1,5 +1,6 @@
 use proc_macro::{self, Span, TokenStream};
-use quote::{quote, ToTokens};
+use proc_macro2::Span as Span2;
+use quote::{quote, quote_spanned, ToTokens};
 use syn::{parse_macro_input, Attribute, Field, Fields, Ident, ItemStruct, Type};
 
 const NO_EQ: &str = "no_eq";
@@ -43,12 +44,14 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let mut methods = proc_macro2::TokenStream::new();
     for (num, (id, ty, no_eq)) in field_list.iter().enumerate() {
-        let get_id = Ident::new(&format!("get_{}", id), Span::call_site().into());
-        let get_mut_id = Ident::new(&format!("get_mut_{}", id), Span::call_site().into());
-        let update_id = Ident::new(&format!("update_{}", id), Span::call_site().into());
-        let set_id = Ident::new(&format!("set_{}", id), Span::call_site().into());
+        let id_span: Span2 = id.span().unwrap().into();
 
-        methods.extend(quote! {
+        let get_id = Ident::new(&format!("get_{}", id), id_span);
+        let get_mut_id = Ident::new(&format!("get_mut_{}", id), id_span);
+        let update_id = Ident::new(&format!("update_{}", id), id_span);
+        let set_id = Ident::new(&format!("set_{}", id), id_span);
+
+        methods.extend(quote_spanned! { id_span =>
             pub fn #get_id(&self) -> &#ty {
                 &self.#id
             }
@@ -68,14 +71,14 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
             }
         });
         if *no_eq {
-            methods.extend(quote! {
+            methods.extend(quote_spanned! { id_span =>
                 pub fn #set_id(&mut self, value: #ty) {
                     self.tracker |= Self::#id();
                     self.#id = value;
                 }
             });
         } else {
-            methods.extend(quote! {
+            methods.extend(quote_spanned! { id_span =>
                 pub fn #set_id(&mut self, value: #ty) {
                     if self.#id != value {
                         self.tracker |= Self::#id();
@@ -86,7 +89,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
         }
     }
 
-    output.extend(quote! {
+    output.extend(quote_spanned! { ident.span() =>
     impl #ident {
         #methods
         pub const fn track_all() -> #tracker_ty {
