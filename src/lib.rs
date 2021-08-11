@@ -25,7 +25,7 @@
 //!
 //! Let's have a look at a small example.
 //!
-//! ```
+//! ```run
 //! #[tracker::track]
 //! struct Test {
 //!     x: u8,

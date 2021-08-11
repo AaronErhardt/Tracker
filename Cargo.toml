@@ -1,6 +1,6 @@
 [package]
 name = "tracker"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2018"
 description = "A macro to track changes to your structs"
@@ -13,4 +13,5 @@ categories = ["data-structures"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tracker-macros = "0.1"
+#tracker-macros = { path = "macros" }
+tracker-macros = "0.1.1"
