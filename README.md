@@ -1,5 +1,9 @@
 # Tracker - track changes to structs efficiently
 
+[![Rust](https://github.com/AaronErhardt/Tracker/actions/workflows/rust.yml/badge.svg)](https://github.com/AaronErhardt/Tracker/actions/workflows/rust.yml)
+[![Tracker on crates.io](https://img.shields.io/crates/v/tracker)](https://crates.io/crates/tracker)
+[![Tracker on docs.rs](https://docs.rs/tracker/badge.svg)](https://docs.rs/tracker)
+
 Tracker is a small crate that allows you to track changes to struct fields.
 
 It implements the following methods for your struct fields:
