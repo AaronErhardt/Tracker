@@ -33,24 +33,24 @@ struct Test {
 }
 
 fn main() {
-	let mut t = Test {
-		x: 0,
+    let mut t = Test {
+        x: 0,
         y: 0,
-		// the macro generates a new variable called
-		// "tracker" that stores the changes
-		tracker: 0,
+        // the macro generates a new variable called
+        // "tracker" that stores the changes
+        tracker: 0,
     };
 
-	t.set_x(42);
-	// let's check whether the change was detected
-	assert!(t.changed(Test::x()));
+    t.set_x(42);
+    // let's check whether the change was detected
+    assert!(t.changed(Test::x()));
 
     // reset t so we don't track old changes
-	t.reset();
+    t.reset();
 
     t.set_x(42);
-	// same value so no change
-	assert!(!t.changed(Test::x()));
+    // same value so no change
+    assert!(!t.changed(Test::x()));
 }
 ```
 
@@ -98,7 +98,7 @@ impl Test {
 struct Test {
     #[tracker::do_not_track]
     a: u8,
-	#[do_not_track]
+    #[do_not_track]
     b: u8,
     #[tracker::no_eq]
     c: u8,
