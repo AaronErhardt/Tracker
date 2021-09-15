@@ -1,7 +1,7 @@
 use proc_macro::{self, Span, TokenStream};
-use proc_macro2::Span as Span2;
+use proc_macro2::{Span as Span2, TokenStream as TokenStream2};
 use quote::{quote, quote_spanned, ToTokens};
-use syn::{parse_macro_input, Attribute, Field, Fields, Ident, ItemStruct, Type};
+use syn::{parse_macro_input, Attribute, Field, Fields, Ident, ItemStruct, Type, GenericParam};
 
 const NO_EQ: &str = "no_eq";
 const DO_NOT_TRACK: &str = "do_not_track";
@@ -13,8 +13,20 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let mut data: ItemStruct = parse_macro_input!(item);
     let ident = data.ident.clone();
+    let generics = data.generics.clone();
     let tracker_ty;
     let struct_vis = &data.vis;
+
+    let mut generics_iter = data.generics.params.iter();
+    let mut generic_idents = TokenStream2::new();
+
+    if let Some(first) = generics_iter.next() {
+        impl_struct_generics(first, &mut generic_idents);
+        for generic_param in generics_iter {
+            generic_idents.extend(quote! {,});
+            impl_struct_generics(generic_param, &mut generic_idents);
+        }
+    }
 
     let mut field_list = Vec::new();
     if let Fields::Named(named_fields) = &mut data.fields {
@@ -76,7 +88,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
             #[allow(dead_code, non_snake_case)]
             /// Get bit mask to look for changes on this field.
-            #vis const fn #id() -> #tracker_ty {
+            #vis fn #id() -> #tracker_ty {
                 1 << #num
             }
         });
@@ -104,12 +116,18 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     output.extend(quote_spanned! { ident.span() =>
-    impl #ident {
+    impl #generics #ident < #generic_idents > {
         #methods
         #[allow(dead_code)]
         /// Use this to check whether any changes made to this struct.
-        #struct_vis const fn track_all() -> #tracker_ty {
+        #struct_vis fn track_all() -> #tracker_ty {
             #tracker_ty::MAX
+        }
+
+        #[allow(dead_code)]
+        /// Use this to mark all fields of the struct as changed.
+        #struct_vis fn mark_all_changed(&mut self) {
+            self.tracker = #tracker_ty::MAX;
         }
 
         /// Check for changes made to this struct.
@@ -125,6 +143,20 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
     });
 
     output.into()
+}
+
+fn impl_struct_generics(param: &GenericParam, stream: &mut TokenStream2) {
+    match param {
+        GenericParam::Type(ty) => {
+            ty.ident.to_tokens(stream)
+        }
+        GenericParam::Const(cnst) => {
+            cnst.to_tokens(stream)
+        }
+        GenericParam::Lifetime(lifetime) => {
+            lifetime.to_tokens(stream)
+        }
+    }
 }
 
 /// Look for no_eq and do_not_track attributes and remove

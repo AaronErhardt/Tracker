@@ -122,7 +122,7 @@
 
 pub use tracker_macros::track;
 
-#[cfg(test)]
+//#[cfg(test)]
 mod test {
 
     #[derive(Debug, PartialEq)]
@@ -158,6 +158,13 @@ mod test {
         _o: Option<u128>,
         #[no_eq]
         no_copy: NoCopy,
+    }
+
+    #[crate::track]
+    struct Generic<T: std::fmt::Debug> {
+        #[no_eq]
+        test: T,
+        int: u8,
     }
 
     #[test]
@@ -202,5 +209,14 @@ mod test {
 
         t.a = 10;
         assert!(!t.changed(Test::track_all()));
+
+        let mut g = Generic {
+            test: 0u8,
+            int: 1,
+            tracker: 0,
+        };
+
+        g.set_test(1);
+        assert!(g.changed(Generic::<u8>::test()));
     }
 }
