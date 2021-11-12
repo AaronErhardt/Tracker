@@ -138,6 +138,13 @@ mod test {
         }
     }
 
+    #[allow(dead_code)]
+    #[crate::track]
+    pub struct PaginationViewModel<Config, Allocator=NoCopy> {
+        config: std::marker::PhantomData<Config>,
+        allocator: std::marker::PhantomData<Allocator>
+    }
+
     #[crate::track]
     struct Empty {}
 

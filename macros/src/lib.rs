@@ -13,9 +13,17 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     let mut data: ItemStruct = parse_macro_input!(item);
     let ident = data.ident.clone();
-    let generics = data.generics.clone();
     let tracker_ty;
     let struct_vis = &data.vis;
+
+    // Remove default type parameters (like <Type=DefaultType>).
+    let mut generics = data.generics.clone();
+    for param in generics.params.iter_mut() {
+        if let GenericParam::Type(ty) = param {
+            ty.eq_token = None;
+            ty.default = None;
+        }
+    }
 
     let mut generics_iter = data.generics.params.iter();
     let mut generic_idents = TokenStream2::new();
@@ -148,6 +156,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 fn impl_struct_generics(param: &GenericParam, stream: &mut TokenStream2) {
     match param {
         GenericParam::Type(ty) => {
+
             ty.ident.to_tokens(stream)
         }
         GenericParam::Const(cnst) => {
