@@ -32,27 +32,24 @@
 //!     y: u64,
 //! }
 //!
-//! fn main() {
-//!     let mut t = Test {
-//!         x: 0,
-//!         y: 0,
-//!         // the macro generates a new variable called
-//!         // "tracker" that stores the changes
-//!         tracker: 0,
-//!     };
+//! let mut t = Test {
+//!     x: 0,
+//!     y: 0,
+//!     // the macro generates a new variable called
+//!     // "tracker" that stores the changes
+//!     tracker: 0,
+//! };
 //!
-//!     t.set_x(42);
-//!     // let's check whether the change was detected
-//!     assert!(t.changed(Test::x()));
+//! t.set_x(42);
+//! // let's check whether the change was detected
+//! assert!(t.changed(Test::x()));
 //!
-//!     // reset t so we don't track old changes
-//!     t.reset();
+//! // reset t so we don't track old changes
+//! t.reset();
 //!
-//!     t.set_x(42);
-//!     // same value so no change
-//!     assert!(!t.changed(Test::x()));
-//! }
-//!
+//! t.set_x(42);
+//! // same value so no change
+//! assert!(!t.changed(Test::x()));
 //! ```
 //!
 //! What happens behind the scenes when you call `set_x()` is that a bitflag is set in the tracker field of your struct:
@@ -122,7 +119,7 @@
 
 pub use tracker_macros::track;
 
-//#[cfg(test)]
+#[cfg(test)]
 mod test {
 
     #[derive(Debug, PartialEq)]
@@ -138,11 +135,10 @@ mod test {
         }
     }
 
-    #[allow(dead_code)]
     #[crate::track]
-    pub struct PaginationViewModel<Config, Allocator=NoCopy> {
-        config: std::marker::PhantomData<Config>,
-        allocator: std::marker::PhantomData<Allocator>
+    struct TestDefaultParam<Config, Allocator = NoCopy> {
+        _config: std::marker::PhantomData<Config>,
+        _allocator: std::marker::PhantomData<Allocator>,
     }
 
     #[crate::track]
