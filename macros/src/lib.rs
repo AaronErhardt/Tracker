@@ -1,7 +1,7 @@
 use proc_macro::{self, Span, TokenStream};
 use proc_macro2::{Span as Span2, TokenStream as TokenStream2};
 use quote::{quote, quote_spanned, ToTokens};
-use syn::{parse_macro_input, Attribute, Field, Fields, Ident, ItemStruct, Type, GenericParam};
+use syn::{parse_macro_input, Attribute, Field, Fields, GenericParam, Ident, ItemStruct, Type};
 
 const NO_EQ: &str = "no_eq";
 const DO_NOT_TRACK: &str = "do_not_track";
@@ -15,6 +15,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let ident = data.ident.clone();
     let tracker_ty;
     let struct_vis = &data.vis;
+    let where_clause = &data.generics.where_clause;
 
     // Remove default type parameters (like <Type=DefaultType>).
     let mut generics = data.generics.clone();
@@ -72,7 +73,6 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
         let update_id = Ident::new(&format!("update_{}", id), id_span);
         let set_id = Ident::new(&format!("set_{}", id), id_span);
 
-
         methods.extend(quote_spanned! { id_span =>
             #[allow(dead_code, non_snake_case)]
             /// Get an immutable reference to this field.
@@ -124,7 +124,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     output.extend(quote_spanned! { ident.span() =>
-    impl #generics #ident < #generic_idents > {
+    impl #generics #ident < #generic_idents > #where_clause {
         #methods
         #[allow(dead_code)]
         /// Use this to check whether any changes made to this struct.
@@ -155,16 +155,9 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
 fn impl_struct_generics(param: &GenericParam, stream: &mut TokenStream2) {
     match param {
-        GenericParam::Type(ty) => {
-
-            ty.ident.to_tokens(stream)
-        }
-        GenericParam::Const(cnst) => {
-            cnst.to_tokens(stream)
-        }
-        GenericParam::Lifetime(lifetime) => {
-            lifetime.to_tokens(stream)
-        }
+        GenericParam::Type(ty) => ty.ident.to_tokens(stream),
+        GenericParam::Const(cnst) => cnst.to_tokens(stream),
+        GenericParam::Lifetime(lifetime) => lifetime.to_tokens(stream),
     }
 }
 
