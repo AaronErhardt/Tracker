@@ -136,10 +136,19 @@ mod test {
     }
 
     #[crate::track]
-    struct TestDefaultParam<Config, Allocator = NoCopy> {
+    struct TestDefaultParam<Config, Allocator = NoCopy>
+    where
+        Config: ?Sized + std::fmt::Debug,
+    {
         _config: std::marker::PhantomData<Config>,
         _allocator: std::marker::PhantomData<Allocator>,
     }
+
+    const _TEST_WHERE: TestDefaultParam<[u8]> = TestDefaultParam {
+        _config: std::marker::PhantomData,
+        _allocator: std::marker::PhantomData,
+        tracker: 0,
+    };
 
     #[crate::track]
     struct Empty {}
