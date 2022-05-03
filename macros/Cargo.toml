@@ -6,7 +6,7 @@ edition = "2021"
 description = "Macros for the tracker crate"
 repository = "https://github.com/AaronErhardt/Tracker"
 readme = "../README.md"
-license = "LGPL-3.0-or-later"
+license = "Apache-2.0 OR MIT"
 
 keywords = ["track", "tracker", "change"]
 categories = ["data-structures"]

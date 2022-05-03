@@ -3,10 +3,10 @@ name = "tracker"
 version = "0.1.2"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2021"
-description = "A macro to track changes to your structs"
+description = "A macro to track changes on structs"
 repository = "https://github.com/AaronErhardt/Tracker"
 readme = "README.md"
-license = "LGPL-3.0-or-later"
+license = "Apache-2.0 OR MIT"
 
 keywords = ["track", "tracker", "change"]
 categories = ["data-structures"]
