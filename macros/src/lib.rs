@@ -12,7 +12,9 @@
 use proc_macro::{self, Span, TokenStream};
 use proc_macro2::{Span as Span2, TokenStream as TokenStream2};
 use quote::{quote, quote_spanned, ToTokens};
-use syn::{parse_macro_input, Attribute, Field, Fields, GenericParam, Ident, ItemStruct, Type};
+use syn::{
+    parse_macro_input, Attribute, Error, Field, Fields, GenericParam, Ident, ItemStruct, Type,
+};
 
 const NO_EQ: &str = "no_eq";
 const DO_NOT_TRACK: &str = "do_not_track";
@@ -20,10 +22,14 @@ const DO_NOT_TRACK: &str = "do_not_track";
 /// Implements tracker methods for structs.
 #[proc_macro_attribute]
 pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
-    assert!(
-        attr.is_empty(),
-        "The track macro doesn't take any arguments"
-    );
+    if !attr.is_empty() {
+        return Error::new(
+            attr.into_iter().next().unwrap().span().into(),
+            "This macro doesn't handle attributes",
+        )
+        .into_compile_error()
+        .into();
+    }
 
     let mut data: ItemStruct = parse_macro_input!(item);
     let ident = data.ident.clone();
