@@ -89,7 +89,7 @@ pub fn track(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
             #[allow(dead_code, non_snake_case)]
             /// Use a closure to update this field. Marks the field as changed.
-            #vis fn #update_id<F: Fn(&mut #ty)>(&mut self, f: F)  {
+            #vis fn #update_id<F: FnOnce(&mut #ty)>(&mut self, f: F)  {
                 self.tracker |= Self::#id();
                 f(&mut self.#id);
             }
