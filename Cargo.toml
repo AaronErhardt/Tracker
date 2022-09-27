@@ -19,4 +19,4 @@ members = [
 
 [dependencies]
 #tracker-macros = { path = "macros" }
-tracker-macros = "0.1.1"
+tracker-macros = "0.1.7"

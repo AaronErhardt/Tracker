@@ -220,10 +220,10 @@ mod test {
         assert_eq!(*t.get_no_copy(), NoCopy::Not);
         assert!(t.changed(Test::no_copy()));
 
-        t.get_x();
+        let _ = t.get_x();
         assert!(!t.changed(Test::x()));
 
-        t.get_mut_y();
+        let _ = t.get_mut_y();
         assert!(t.changed(Test::y()));
 
         t.reset();
