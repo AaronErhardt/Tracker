@@ -117,6 +117,15 @@
 //! so that even overwriting with the same value marks the field as changed.
 //! pub use tracker_macros::track;
 
+#![warn(
+    missing_debug_implementations,
+    missing_docs,
+    rust_2018_idioms,
+    unreachable_pub,
+    clippy::cargo,
+    clippy::must_use_candidate
+)]
+
 pub use tracker_macros::track;
 
 #[cfg(test)]
