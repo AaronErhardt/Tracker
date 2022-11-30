@@ -1,6 +1,6 @@
 [package]
 name = "tracker"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2021"
 description = "A macro to track changes on structs"

@@ -123,7 +123,8 @@
     rust_2018_idioms,
     unreachable_pub,
     clippy::cargo,
-    clippy::must_use_candidate
+    clippy::must_use_candidate,
+    clippy::cargo
 )]
 
 pub use tracker_macros::track;
@@ -186,6 +187,13 @@ mod test {
         #[no_eq]
         test: T,
         int: u8,
+    }
+
+    #[test]
+    fn remove_warnings() {
+        let _reset = Generic::<()>::reset;
+        let _reset = TestDefaultParam::<()>::reset;
+        let _changed = TestDefaultParam::<()>::changed;
     }
 
     #[test]

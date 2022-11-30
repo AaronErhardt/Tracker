@@ -6,7 +6,8 @@
     rust_2018_idioms,
     unreachable_pub,
     clippy::cargo,
-    clippy::must_use_candidate
+    clippy::must_use_candidate,
+    clippy::cargo
 )]
 
 use proc_macro::{self, Span, TokenStream};
@@ -260,7 +261,7 @@ fn tracker_type(len: usize) -> proc_macro2::TokenStream {
             quote! {u128}
         }
         _ => {
-            panic!("Can only track up to 128 values")
+            panic!("You can only track up to 128 values")
         }
     }
 }
