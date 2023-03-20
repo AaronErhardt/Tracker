@@ -1,6 +1,6 @@
 [package]
 name = "tracker"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2021"
 description = "A macro to track changes on structs"
@@ -18,4 +18,4 @@ members = [
 ]
 
 [dependencies]
-tracker-macros = { version = "0.2", path = "macros" }
+tracker-macros = { version = "0.2.1", path = "macros" }

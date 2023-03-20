@@ -1,6 +1,6 @@
 [package]
 name = "tracker-macros"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
 edition = "2021"
 description = "Macros for the tracker crate"
