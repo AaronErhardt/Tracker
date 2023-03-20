@@ -73,6 +73,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
         let change_field = Field {
             attrs: Vec::new(),
             vis: syn::Visibility::Inherited,
+            mutability: syn::FieldMutability::None,
             ident: Some(Ident::new("tracker", Span::call_site().into())),
             colon_token: None,
             ty: Type::Verbatim(tracker_ty.clone()),
@@ -131,6 +132,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
                 1 << #num
             }
         });
+
         if *no_eq {
             let set_doc = format!("Set the value of field {id} and mark the field as changed.");
             methods.extend(quote_spanned! { id_span =>
@@ -210,7 +212,7 @@ fn parse_field_attrs(attrs: &mut Vec<Attribute>) -> (bool, bool) {
     let attrs_clone = attrs.clone();
 
     for (index, attr) in attrs_clone.iter().enumerate() {
-        let segs = &attr.path.segments;
+        let segs = &attr.path().segments;
         match segs.len() {
             1 => {
                 let first = &segs.first().unwrap().ident;
