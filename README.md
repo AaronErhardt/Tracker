@@ -9,18 +9,24 @@ Tracker is a small crate that allows you to track changes to struct fields.
 It implements the following methods for your struct fields:
 
 + `get_#field_name()`  
-  Get a immutable reference to your field
+  Get an immutable reference to `field_name`
 
 + `get_mut_#field_name()`  
-  Get a mutable reference to your field. Assumes the field will be modified and marks it as changed.
+  Get a mutable reference to `field_name`. Assumes the field will be modified and marks it as changed.
 
 + `set_#field_name(value)`  
-  Get a mutable reference to your field. Marks the field as changed only if the new value isn't equal with the previous value.
+  Set a value of `field_name`. Marks the field as changed only if the new value isn't equal with the previous value.
 
 + `update_#field_name(fn)`  
-  Update your mutable field with a function or closure. Assumes the field will be modified and marks it as changed.
+  Update your `field_name` with a function or closure. Assumes the field will be modified and marks it as changed.
 
-To check for changes you can call `var_name.changed(StructName::field_name())` and it will return a bool.
++ `changed_#field_name()`  
+  Check if value of `field_name` has changed.
+
+To check for changes explicitly you can call `var_name.changed(StructName::field_name())` and it will return a bool.
+Multiple fields can be checked with `var_name.changed(StructName::field_name_1() | StructName::field_name_2())`.
+Finally, it is possible to check for any changes at all with `var_name.changed(StructName::track_all())` or its shortcut
+`var_name.changed_any()`.
 
 To reset all previous changes you can call `var_name.reset()`.
 

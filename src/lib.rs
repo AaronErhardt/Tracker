@@ -200,6 +200,7 @@ mod test {
     fn test_all() {
         let mut empty = Empty { tracker: 1 };
         assert!(empty.changed(Empty::track_all()));
+        assert!(empty.changed_any());
         empty.reset();
 
         let mut t = Test::default();
@@ -210,6 +211,7 @@ mod test {
 
         t.set_c(10);
         assert!(t.changed(Test::c()));
+        assert!(t.changed_c());
 
         t.reset();
 
@@ -217,8 +219,11 @@ mod test {
         t.set_b(10);
         t.set_c(10);
         assert!(!t.changed(Test::b()));
+        assert!(!t.changed_b());
         assert!(t.changed(Test::c()));
+        assert!(t.changed_c());
         assert!(t.changed(Test::track_all()));
+        assert!(t.changed_any());
 
         t.reset();
 
@@ -227,17 +232,21 @@ mod test {
         });
         assert_eq!(*t.get_no_copy(), NoCopy::Not);
         assert!(t.changed(Test::no_copy()));
+        assert!(t.changed_no_copy());
 
         let _ = t.get_x();
         assert!(!t.changed(Test::x()));
+        assert!(!t.changed_x());
 
         let _ = t.get_mut_y();
         assert!(t.changed(Test::y()));
+        assert!(t.changed_y());
 
         t.reset();
 
         t.a = 10;
         assert!(!t.changed(Test::track_all()));
+        assert!(!t.changed_any());
 
         let mut g = Generic {
             test: 0u8,
@@ -247,5 +256,6 @@ mod test {
 
         g.set_test(1);
         assert!(g.changed(Generic::<u8>::test()));
+        assert!(g.changed_test());
     }
 }

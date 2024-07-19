@@ -93,6 +93,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
         let get_id = Ident::new(&format!("get_{}", id), id_span);
         let get_mut_id = Ident::new(&format!("get_mut_{}", id), id_span);
         let update_id = Ident::new(&format!("update_{}", id), id_span);
+        let changed_id = Ident::new(&format!("changed_{}", id), id_span);
         let set_id = Ident::new(&format!("set_{}", id), id_span);
 
         let get_doc = format!("Get an immutable reference to the {id} field.");
@@ -100,6 +101,8 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
             format!("Get a mutable reference to the {id} field and mark the field as changed.");
         let update_doc =
             format!("Use a closure to update the {id} field and mark the field as changed.");
+        let changed_doc =
+            format!("Check if value of {id} field has changed.");
         let bit_mask_doc = format!("Get a bit mask to look for changes on the {id} field.");
 
         methods.extend(quote_spanned! { id_span =>
@@ -120,9 +123,15 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
 
             #[allow(dead_code, non_snake_case)]
             #[doc = #update_doc]
-            #vis fn #update_id<F: FnOnce(&mut #ty)>(&mut self, f: F)  {
+            #vis fn #update_id<F: FnOnce(&mut #ty)>(&mut self, f: F) {
                 self.tracker |= Self::#id();
                 f(&mut self.#id);
+            }
+
+            #[allow(dead_code, non_snake_case)]
+            #[doc = #changed_doc]
+            #vis fn #changed_id(&self) -> bool {
+                self.changed(Self::#id())
             }
 
             #[allow(dead_code, non_snake_case)]
@@ -177,11 +186,18 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
             /// Check for changes made to this struct with a given bitmask.
             ///
             /// To receive the bitmask, simply call `Type::#field_name()`
-            /// or `Type::#track_all()`;
+            /// or `Type::#track_all()`.
             #[warn(dead_code)]
             #[must_use]
             #struct_vis fn changed(&self, mask: #tracker_ty) -> bool {
                 self.tracker & mask != 0
+            }
+
+            /// Check for any changes made to this struct.
+            #[allow(dead_code)]
+            #[must_use]
+            #struct_vis fn changed_any(&self) -> bool {
+                self.tracker != 0
             }
 
             /// Resets the tracker value of this struct to mark all fields
