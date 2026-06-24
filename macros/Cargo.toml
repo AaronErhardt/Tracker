@@ -2,7 +2,7 @@
 name = "tracker-macros"
 version = "0.2.2"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
-edition = "2021"
+edition = "2024"
 description = "Macros for the tracker crate"
 repository = "https://github.com/AaronErhardt/Tracker"
 readme = "../README.md"

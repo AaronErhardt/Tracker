@@ -2,7 +2,7 @@
 name = "tracker"
 version = "0.2.2"
 authors = ["Aaron Erhardt <aaron.erhardt@t-online.de>"]
-edition = "2021"
+edition = "2024"
 description = "A macro to track changes on structs"
 repository = "https://github.com/AaronErhardt/Tracker"
 readme = "README.md"
