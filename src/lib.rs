@@ -123,8 +123,7 @@
     rust_2018_idioms,
     unreachable_pub,
     clippy::cargo,
-    clippy::must_use_candidate,
-    clippy::cargo
+    clippy::must_use_candidate
 )]
 
 pub use tracker_macros::track;
@@ -132,17 +131,12 @@ pub use tracker_macros::track;
 #[cfg(test)]
 mod test {
 
-    #[derive(Debug, PartialEq)]
+    #[derive(Debug, PartialEq, Default)]
     enum NoCopy {
+        #[default]
         Do,
         Not,
         _Copy,
-    }
-
-    impl Default for NoCopy {
-        fn default() -> Self {
-            NoCopy::Do
-        }
     }
 
     #[crate::track]

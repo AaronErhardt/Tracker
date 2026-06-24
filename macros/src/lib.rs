@@ -6,8 +6,7 @@
     rust_2018_idioms,
     unreachable_pub,
     clippy::cargo,
-    clippy::must_use_candidate,
-    clippy::cargo
+    clippy::must_use_candidate
 )]
 
 use proc_macro::{self, Span, TokenStream};
@@ -101,8 +100,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
             format!("Get a mutable reference to the {id} field and mark the field as changed.");
         let update_doc =
             format!("Use a closure to update the {id} field and mark the field as changed.");
-        let changed_doc =
-            format!("Check if value of {id} field has changed.");
+        let changed_doc = format!("Check if value of {id} field has changed.");
         let bit_mask_doc = format!("Get a bit mask to look for changes on the {id} field.");
 
         methods.extend(quote_spanned! { id_span =>
