@@ -114,8 +114,8 @@
 //!
 //! + `do_not_track` if you don't want tracker to implement anything for this field
 //! + `no_eq` if the type of the field doesn't implement PartialEq or tracker should not check for equality when calling `set_#field_name(value)`
-//! so that even overwriting with the same value marks the field as changed.
-//! pub use tracker_macros::track;
+//!   so that even overwriting with the same value marks the field as changed.
+//!   pub use tracker_macros::track;
 
 #![warn(
     missing_debug_implementations,
