@@ -204,7 +204,7 @@ mod test {
         assert!(t.changed(8));
 
         t.set_c(10);
-        assert!(t.changed(Test::c()));
+        assert!(t.changed(Test::c_()));
         assert!(t.changed_c());
 
         t.reset();
@@ -212,9 +212,9 @@ mod test {
         // b and c are already 10. But only for b eq is checked and no change bit is set.
         t.set_b(10);
         t.set_c(10);
-        assert!(!t.changed(Test::b()));
+        assert!(!t.changed(Test::b_()));
         assert!(!t.changed_b());
-        assert!(t.changed(Test::c()));
+        assert!(t.changed(Test::c_()));
         assert!(t.changed_c());
         assert!(t.changed(Test::track_all()));
         assert!(t.changed_any());
@@ -225,15 +225,15 @@ mod test {
             *no_copy = NoCopy::Not;
         });
         assert_eq!(*t.get_no_copy(), NoCopy::Not);
-        assert!(t.changed(Test::no_copy()));
+        assert!(t.changed(Test::no_copy_()));
         assert!(t.changed_no_copy());
 
         let _ = t.get_x();
-        assert!(!t.changed(Test::x()));
+        assert!(!t.changed(Test::x_()));
         assert!(!t.changed_x());
 
         let _ = t.get_mut_y();
-        assert!(t.changed(Test::y()));
+        assert!(t.changed(Test::y_()));
         assert!(t.changed_y());
 
         t.reset();
@@ -249,7 +249,7 @@ mod test {
         };
 
         g.set_test(1);
-        assert!(g.changed(Generic::<u8>::test()));
+        assert!(g.changed(Generic::<u8>::test_()));
         assert!(g.changed_test());
     }
 }
