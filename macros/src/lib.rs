@@ -83,7 +83,11 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
         panic!("No named fields");
     }
 
-    let mut output = data.to_token_stream();
+    let mut output = quote! {
+        #[allow(clippy::partial_pub_fields)]
+    };
+
+    output.extend(data.to_token_stream());
 
     let mut methods = proc_macro2::TokenStream::new();
     for (num, (id, ty, no_eq, vis)) in field_list.iter().enumerate() {
@@ -121,7 +125,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
 
             #[allow(dead_code, non_snake_case)]
             #[doc = #update_doc]
-            #vis fn #update_id<F: FnOnce(&mut #ty)>(&mut self, f: F) {
+            #vis fn #update_id<F>(&mut self, f: F) where F: FnOnce(&mut #ty) {
                 self.tracker |= Self::#id();
                 f(&mut self.#id);
             }
@@ -166,6 +170,7 @@ pub fn track(attr: TokenStream, item: TokenStream) -> TokenStream {
     }
 
     output.extend(quote_spanned! { ident.span() =>
+        #[allow(clippy::multiple_inherent_impl, clippy::missing_const_for_fn)]
         impl #generics #ident < #generic_idents > #where_clause {
             #methods
             #[allow(dead_code)]
